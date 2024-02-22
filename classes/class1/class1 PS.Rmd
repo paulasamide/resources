@@ -18,7 +18,6 @@ knitr::opts_knit$set(root.dir = "/Users/paulasamide/Desktop/AU/semester 2/method
 ### Setup
 ```{r}
 # Make sure this guy is installed/updated (if you've alreadygot rstanarm installed, you just need to load it in using either library() or p_load() as below)
-install.packages("rstanarm")
 library(rstanarm)
 
 # Load the rest
@@ -37,13 +36,14 @@ hibbs <- read.table("data/ElectionsEconomy/data/hibbs.dat", header = TRUE)
 # Make scatterplot
 plot(hibbs$growth, hibbs$vote, xlab="Average recent growth in personal income",
 ylab="Incumbent party's vote share")
+text(hibbs$growth, hibbs$vote, labels = hibbs$year, pos = 3, cex = 0.8)
 
 # Estimate regression y = a + bx + error
 M1 <- stan_glm(vote ~ growth, data=hibbs)
 
 # Add a fitted line to the graph
 abline(coef(M1), col="gray") # needs to be run with the plot() code above - running the whole chunk is the easiest way
- 
+
 # Display the fitted model
 print(M1)
 
@@ -59,14 +59,14 @@ In Figure 1.1b, the linear model predicts vote share to roughly an accuracy of 3
 ```{r}
 
 # Basic plot with ggplot2
-ggplot(hibbs, aes(x = growth, y = vote)) +
+ggplot(hibbs, aes(x = growth, y = vote))+
   geom_point() +  # Add points
   labs(
     x = "Average recent growth in personal income",
     y = "Incumbent party's vote share",
     title = "Relationship between Income Growth and Vote Share",
     subtitle = "Data from Hibbs Dataset"
-  ) +
+  )+
   theme_minimal() +  # Use a minimal theme
   theme(
     plot.title = element_text(hjust = 0.5),  # Center the title
@@ -88,36 +88,182 @@ set.seed(1998) # setting a seed (in the best year ever??) - this way, even thoug
 # rnorm() works like: my_simulated_data <- rnorm(n, mean, sd) - now you go!
 
 # your code here
+my_simulated_data <- rnorm(20, mean = 10, sd = 5)
 ```
 
 ## Ex. 0.c) Talk with your group and note in 1-2 sentences: What do we know of the data drawn from the rnorm()? 
 
 ## Ex. 0.d) Data are worth 10000% more if visualised, so let's visualise. Using ggplot, make a histogram visualising the data you simulated.
+```{r}
+
+ggplot(data = NULL, aes(x = my_simulated_data)) +
+  geom_histogram(binwidth = 1, fill = "skyblue", color = "black") +
+  labs(title = "Histogram of Simulated Data",
+       x = "Value",
+       y = "Frequency")
+
+```
 
 ## Ex. 0.e) Calculate the empirical mean and empirical sd (just fancy words for "calculate the mean and sd of the simulated data") - are they different from the ones you've set? and why might that be?
+```{r}
+mean(my_simulated_data)
+sd(my_simulated_data)
+
+```
 
 ## Exercises from ROS
 ### Ex. 1.2
 Sketching a regression model and data: Figure 1.1b shows data corresponding to the fitted line y = 46.3 + 3.0x with residual standard deviation 3.9, and values of x ranging roughly from 0 to 4%.
-("Sketch" or "graph"= means simulate i.e. skething data means make some data yourself :) )
+("Sketch" or "graph"= means simulate i.e. sketching data means make some data yourself :) )
 
 #### Ex. 1.2.a) Sketch hypothetical data with the same range of x but corresponding to the line y = 30 + 10x with residual standard deviation 3.9.
 * If you're not sure how to approach this exercise, try and go by the piecemeal hint-intruction in the bottom of this doc :)
+```{r}
+#### 1) define the regression model parameters (intercept, slope, error)      
+intercept <- 30
+slope <- 10
+residual_sd <- 3.9
+
+
+# 2) generate x-values in the required range
+x <- seq(0, 4, length.out = 20)
+
+
+# 3) Calculate y values based on the given regression and your newly created x-values without the error term, which gives you the y get the perfect fit line
+y <- intercept + slope * x
+
+
+# 4) Add random error to the line we fit above: we can introduce variability by adding some normally distributed random errors to the y values. This can be done using rnorm() as in the 0-exercises, with mean 0 and standard deviation equal to the residual standard deviation (3.9) for instance.
+set.seed(1) 
+nd_random_error <- rnorm(20, mean = 0, sd = residual_sd)
+y_witherror <- y+nd_random_error
+
+
+# 5) Prepare data for plotting: get the x-values and y-values in a dataframe to prepare for plotting w. ggplot
+df <- tibble(x = x, y = y_witherror)
+
+
+# 6) Now, plot to check it out
+plot(df)
+
+
+# 7) Optional: Fit and review a regression model: As an additional step, you can fit a linear regression model to the generated data using stan_glm() or any other fitting function to see how closely the estimated parameters match the ones used to generate the data. 
+M2 <- stan_glm(y_witherror ~ x, data=df)
+print(M2) ## you can see that it deviates a little bit from the 'original' data - bc it takes error into account <3
+
+# to include it in the plot
+coef(M2)
+abline(coef(M2))
+
+```
 
 #### Ex. 1.2.b) Sketch hypothetical data with the same range of x but corresponding to the line y = 30 + 10x with residual standard deviation 10.
+```{r}
+# 1) define regression parameters
+intercept2 <- 30
+slope2 <- 10
+residual_sd2 <- 10
+
+# 2) define x
+x2 <- seq(0,4,length.out=100)
+
+# 3) calculate y-values
+y2_values <- intercept2 + slope2 * x2
+
+# 4) add the residual standard deviation aka error
+set.seed(2)
+error2 <- rnorm(length(x), mean = 0, sd = residual_sd2)
+y2_witherror <- y2_values + error2
+
+# 5) create df with x & y
+df2 <- tibble(x = x, y = y2_witherror)
+
+# 6) plot 
+plot(df2)
+
+# 7) add regression model
+RM2 <- stan_glm(y2_witherror ~ x, data = df2)
+print(RM2)
+abline(RM2)
+
+```
 
 ### Ex. 1.5 Goals of regression: Give examples of applied statistics problems of interest to you in which the goals are:
 #### (a) Forecasting/classification
+- Forecasting stock prices
 
 #### (b) Exploring associations
+- Association between effect of new teaching strategy 
 
 #### (c) Extrapolation
+- Prediction of future height in kids (could just be a linear extrapolation), using measures and regression fits to predict future outcomes
 
 #### (d) Causal inference
+- Does a drug or treatment have an effect compared to a control group, e.g. does caffeine actually impact your recall or did placebo have the same effect
 
 ### Ex. 2.3 Data processing: Go to the data folder Names, find the file allnames_clean.csv and use this to make a graph similar to Figure 2.8, but for girls. 
+```{r}
+# Setting wd & loading in data
+setwd("/Users/paulasamide/Desktop/AU/semester 2/methods/resources/classes")
+allnames <- read.csv("data/Names/data/allnames_clean.csv", header = TRUE)
+
+# Investigating data
+colnames(allnames)
+unique(allnames$sex)
+
+# Filtering out the girlies
+female_names <- filter(allnames, sex == 'F')
+
+# Get the last letter in their names
+female_names <- female_names %>% 
+                # Making a col called last_letter
+                mutate(last_letter = str_sub(female_names$name, -1))  
+
+# Convert the new col to a factor
+female_names <- female_names %>% mutate(last_letter = as.factor(last_letter))
+
+colnames(female_names)
+
+# Get years. The cols that are years start with X and have 4 digits after, so we can grab them using grep() and some regular expression magic
+years <- grep("^X\\d{4}$", names(female_names), value = TRUE)
+
+# Now, for each letter, let's summarise number of those per year
+sums <- female_names %>% group_by(last_letter) %>% summarise_at(years, sum, na.rm = TRUE)
+
+# Let's turn these counts (frequencies) into percentages, cause we need that for the plot. We can do this with a function
+freq_to_perc <- function(x, na.rm = TRUE) (x/sum(x))*100
+
+percentage_names_f<- mutate_at(sums, 
+                               years, 
+                               freq_to_perc)
+
+# Pivot longer because it's nicer - we want one row for each year with each letter
+long_df <- pivot_longer(percentage_names_f, cols = years, names_to = "Year", values_to = "number")
+
+long_df <- long_df %>% mutate(Year = as.factor(Year))
+long_df <- long_df %>% mutate(Year = as.numeric(Year))
+
+# It goes to 1 instead of starting at 1880, so I'll add 1878 to all for a quick fix
+long_df$Year <- long_df$Year+1879
+max(long_df$Year) # Max should be 2010, min should be 1880
+
+# Finally we can PLOT
+long_df %>% 
+  ggplot(aes(x = Year, y = number, col = last_letter, group = last_letter)) + 
+  geom_line() + 
+  labs(y = "Percentage of girls born with letter", 
+       title = "Overview of % girls born with a specific last letter each year", 
+       x = "Years") +  
+  scale_x_continuous() + 
+  theme(axis.text.x = element_text(angle = -45),
+        plot.title = element_text(face = "bold")) # Makes title bold
+
+
+
+```
 
 ### Ex. 2.7 (b) Reliability and validity: Give an example of a scenario of measurements that have reliability but not validity.
+- A scale that measure 5 kgs off: it is reliable in the sense that it WILL measure the same every time, however the measure is invalid, as it will be 5 kgs off always.
 
 # Pernille's additional notes to Chapter 1 in ROS (not mandatory to read at all)
 I probably wont keep making these notes this formatted but hey, here's to get you started on methods 2 transitioning from methods 1 :) They are just notes I took when skimming through the chapter.
@@ -167,14 +313,14 @@ The question says: Sketch hypothetical data with the same range of x but corresp
 
 #### 1) First, define the regression model parameters (intercept, slope, error) (hint: just make variables called 'intercept' and so on and define the number)
 
-#### 3) Generate X values in the specified range using seq()
+#### 2) Generate X values in the specified range using seq()
 
-#### 4) Calculate y values based on the given regression and your newly created x-values without the error term, which gives you the y get the perfect fit line
+#### 3) Calculate y values based on the given regression and your newly created x-values without the error term, which gives you the y get the perfect fit line
 
-#### 5) Add random error to the line we fit above: we can introduce variability by adding some normally distributed random errors to the y values. This can be done using rnorm() as in the 0-exercises, with mean 0 and standard deviation equal to the residual standard deviation (3.9) for instance.
+#### 4) Add random error to the line we fit above: we can introduce variability by adding some normally distributed random errors to the y values. This can be done using rnorm() as in the 0-exercises, with mean 0 and standard deviation equal to the residual standard deviation (3.9) for instance.
 
-#### 6) Prepare data for plotting: get the x-values and y-values in a dataframe to prepare for plotting w. ggplot
+#### 5) Prepare data for plotting: get the x-values and y-values in a dataframe to prepare for plotting w. ggplot
 
-#### 7) Now, plot to check it out
+#### 6) Now, plot to check it out
 
-#### 8) Optional: Fit and review a regression model: As an additional step, you can fit a linear regression model to the generated data using stan_glm() or any other fitting function to see how closely the estimated parameters match the ones used to generate the data. 
+#### 7) Optional: Fit and review a regression model: As an additional step, you can fit a linear regression model to the generated data using stan_glm() or any other fitting function to see how closely the estimated parameters match the ones used to generate the data. 

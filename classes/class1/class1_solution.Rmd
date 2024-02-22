@@ -172,6 +172,7 @@ p
 M12a <- stan_glm(y_data ~ x, data = data, refresh = 0)
 
 print(M12a) # We see 3.9 under sigma indeed
+
 ```
 
 #### Ex. 1.2.b) Sketch hypothetical data with the same range of x but corresponding to the line y = 30 + 10x with residual standard deviation 10.
