@@ -167,6 +167,13 @@ basketball <- function(){ # starting the function for you
 # your code here
 ```
 
+
+
+
+
+
+#### THIS PART IS ADVANCED (DO EVERYTHING BEFORE 5.8)
+
 ## Ex. 5.8: Coverage of confidence intervals: On page 15 there is a discussion of an experimental study of an education-related intervention in Jamaica, in which the point estimate of the treatment effect, on the log scale, was 0.35 with a standard error of 0.17. Suppose the true effect is 0.10 — this seems more realistic than the point estimate of 0.35 — so that the treatment on average would increase earnings by 0.10 on the log scale. Use simulation to study the statistical properties of this experiment, assuming the standard error is 0.17.
 *Hint 2
 
