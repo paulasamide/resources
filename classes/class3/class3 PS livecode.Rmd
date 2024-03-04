@@ -1,0 +1,114 @@
+---
+title: "class3 PS livecoding"
+output: html_document
+date: "2024-03-04"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Pernille class3 livecode: for loops, while loops, if-else statements
+```{r cars}
+# for loop that squares the numbers from 1:16
+
+for (i in 1:16){
+  squaredNumber <- i^2        # i could have also been called 'number' for readability
+  print(squaredNumber)
+
+}
+
+# while loops 
+
+counter <- 1
+
+while(counter <= 25){
+  
+  print(paste("Counter is currently: ", counter)) # paste() lets us combine strings and non-string variables
+  
+  counter = counter + 1
+  
+  }
+
+# if-else statements - checking if a number is pos, neg or 0
+
+numb <- 9
+
+
+
+if(numb > 0){
+  
+  print("positive number")
+  
+  } else if(numb < 0){
+
+  print("negative number")
+    
+  } else{
+    
+  print("number is zero")
+    
+  }
+
+
+
+## ey beautification worked 
+if(numb > 0)
+  {
+  
+  print("positive number")
+  
+  } else if(numb < 0)
+    {
+
+  print("negative number")
+    
+  } else
+    {
+    
+  print("number is zero")
+    
+  }
+
+
+
+# if-else statement in a for loop
+
+list_of_numbers <- c(9,-5,6,3242342,0)
+
+for(number in list_of_numbers){
+  #*insert if-statements from above*
+}
+
+
+# if-else statement in a function
+
+numberChecker <- function(list_of_numbers){
+  #*insert for loop from above*  
+}
+
+
+numberChecker(c(3,4,8,-2,2,0.1,0))
+
+# - - - - -
+
+# function calculating the area of a rectangle
+
+# as length is a function name is good to not make that name a variable
+
+areaRec <- function(width, length_){
+  area <- width * length_
+  
+  return(area) 
+}
+
+areaRec(2,2)```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+

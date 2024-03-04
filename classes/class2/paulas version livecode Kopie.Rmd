@@ -1,0 +1,153 @@
+---
+title: "livecode exercise"
+output: html_document
+date: "2024-03-02"
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+# Example of a function
+pernille_and_nicolas_function <- function(number){
+  print("heyyy im calculating stuff wait a moment")
+  new_number = number + 2
+  return(new_number)
+}
+
+# See what happens
+pernille_and_nicolas_function(2)
+
+```
+
+### Using R, plot the functions 𝑓1 and 𝑓2 in the range -5.0 to 5.0 as described above using the following parameters: 𝜇 = 0.0, 𝜎 = 1.0, 𝜏 = 1.0. Can you spot any difference?
+```{r}
+# Parameters
+mu <- 0.0
+sigma <-  1.0
+tau <-  1.0
+
+# Define f1
+f_one <- function(x) {
+  (1 / (sigma * sqrt(2 * pi))) * exp(-0.5 * ((x - mu) / sigma) ^ 2)
+}
+
+# Define f2
+f_two <- function(x) {
+  (sqrt(tau / (2 * pi))) * exp((-tau * (x - mu) ^ 2) / 2)
+}
+
+# Generate some x-values that we can put into f1 and f2
+x_value <- seq(from = -5, to = 5, by = 0.2)
+
+# Let's calculate some y values using the functions f1 and f2 on our generated x's
+f_one_output <- f_one(x_value)
+f_two_output <- f_two(x_value)
+
+# Create a dataframe for plotting
+dframe <- data.frame(x = x_value,
+                 f1 = f_one_output,
+                 f2 = f_two_output)
+
+
+# Let's plot
+library(ggplot2)
+plot <- ggplot(dframe,aes(x))+             
+  geom_line(aes(y = f1, colour = "f1"))+
+  geom_line(aes(y = f2, colour = "f2"))+
+  labs(title = "Probability density functions with mu = 0, sigma = 1, tau = 1",
+       subtitle = "Learning about f1 and f2",
+       caption = "Methods 2 #fun",
+       colour = "Function")+
+  theme_minimal()
+
+plot
+
+# Let's create a col to check if theyre the same
+library(tidyverse)
+dframe <- dframe %>% mutate(checking_stuff = ifelse(f1 == f2, TRUE, FALSE))
+
+
+
+```
+
+
+```{r}
+# this is the way pernille did it: she didn't define the parameters in the beginning -> makes it easier to change  values
+
+# Define f1
+f1 <- function(x, mu, sigma) {
+  (1 / (sigma * sqrt(2 * pi))) * exp(-0.5 * ((x - mu) / sigma) ^ 2)
+}
+
+# Define f2
+f2 <- function(x, mu, tau) {
+  (sqrt(tau / (2 * pi))) * exp((-tau * (x - mu) ^ 2) / 2)
+}
+
+# Generate some x-values that we can put into f1 and f2
+x_values <- seq(-5,
+                5,
+                by = 0.2)
+
+# Let's calculate some y values using the functions f1 and f2 on our generated x's
+y_f1 <- f1(x = x_values, 
+           mu = 0.0,
+           sigma = 1.0)
+
+y_f2 <- f2(x = x_values,
+           tau = 1.0,
+           mu = 0.0
+           )
+
+# Create a dataframe for plotting
+df <- data.frame(x = x_values,
+                 f1 = y_f1,
+                 f2 = y_f2)
+# Let's plot
+library(ggplot2)
+plot1 <- ggplot(df,
+                aes(x))+
+  geom_line(aes(y = f1, colour = "f1"))+
+  geom_line(aes(y = f2, colour = "f2"))+
+  labs(title = "Probability density functions with mu = 0, sigma = 1, tau = 1",
+       subtitle = "Learning about f1 and f2",
+       caption = "Methods 2 #fun",
+       colour = "Function")+
+  theme_minimal()
+
+plot1
+
+# Let's create a col to check if theyre the same
+library(tidyverse)
+df <- df %>% mutate(checking_stuff = ifelse(f1 == f2, TRUE, FALSE))
+
+
+# commands to clean up code
+### shift + cmd + a (on mac)
+
+
+```
+
+### Do the same, but this time using the following parameters: 𝜇 = 0.0, 𝜎 = 3.0, 𝜏 = 3.0. How would you describe the influence of 𝜏 and 𝜎 on the width of the distribution?
+```{r}
+# You can just change the values above
+```
+
+Higher tau --> higher precision --> narrower curve. Lower tau opposite.
+Higher sigma --> higher standard deviatin --> wider curve. Lower sigma oposite.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
