@@ -9,7 +9,7 @@ output:
 
 ```{r setup, include=FALSE}
 # Setting my root directory to where I have my /data folder etc. (easier for me, but personalise to your own way of working)
-knitr::opts_knit$set(root.dir = "/Users/pernillebrams/Desktop/AARHUS_UNIVERSITY/instructor_2024/methods-2")
+knitr::opts_knit$set(root.dir = "/Users/paulasamide/Desktop/AU/semester 2/methods/resources")
 
 ```
 
@@ -28,6 +28,7 @@ Loops can be good for simulating. And they are cool. Let's practice is a bit.
 
 ## Exercises to practise loops (discuss with partner/group if you want to)
 ### Ex. A: What is the difference between a for- and a while loop? Explain in your own words in 1-2 sentences.
+A: The function of a for loop is to run a block of code on each element in a sequence. A while loop runs a block of code as long as a specified condition is being met.
 
 ### Ex. B: When would you use for-loops and when would you use while-loops? Explain in your own words in 1-2 sentences
 
@@ -41,6 +42,10 @@ for (i in 1:10){ # For each i in 1:10...
 }
 
 # your simple loop here
+for (p in 1:7){
+  number <- p^4
+  print(number)
+}
 ```
 
 I've also made an example of a while loop below. Make your own example below it. If you have no ideas for what to code in your while loop, here's an example you can try to code up:
@@ -54,6 +59,11 @@ while (number < 10){ # While the number is below 10, do the following
 }
 
 # your simple while-loop here
+some_number <- 0
+while(some_number<20){
+  print("the nr is below 20, so I still run!")
+  some_number = some_number + 2
+}
 ```
 
 ## Exercises to practise functions and if-else statements
@@ -62,14 +72,12 @@ Create a function that accepts a temperature in Fahrenheit and returns the tempe
 ```{r}
 # Function to convert Fahrenheit to Celsius
 convert_to_celsius <- function(fahrenheit) {
-  # Your code here
-  # Hint: Apply the conversion formula within the function
+  conversion <- (fahrenheit-32)*5/9
 }
 
-# Example of how the final function (when you've written it) should be used:
-# temp_celsius <- convert_to_celsius(68)
-# print(temp_celsius)
-# Expected Output (for fahrenheit = 68): 20
+# Using the final function
+convert_to_celsius(68)
+print(convert_to_celsius(68))
 ```
 
 ### Ex. E: Write a function in R that provides clothing advice based on the temperature:
@@ -85,20 +93,25 @@ Use statements if, else if, and else. Google how to set up the syntax with curly
 ```{r}
 # Function to give clothing advice based on temperature
 clothing_advice <- function(temperature) {
-  # Your code here
-  # Hint: Use if-else statements to check the temperature and return the advice
-}
+  if(temperature > 25){
+    print("Wear a T-shirt.")
+  } else if (temperature>=15 & temperature<=25){
+    print("Wear a light jacket.")
+  } else{
+    print("Wear a warm coat.")
+  }
+  }
 
-# Example of how the final function (when you've written it) should be used:
-# advice <- clothing_advice(20)
-# print(advice)
-# Expected Output (for temperature = 20): "Wear a light jacket."
+# Using the final function
+advice <- clothing_advice(20)
+print(advice)
 
 ```
 
 ## Exercises from the book
 
 ## Ex. 0: Write up / copy the code found on page 69-70 in chapter 5 ROS and note whats going on at each step. The book explains it - so just go through it and discuss with your group to understand whats going on.
+I did that but didn't save it -> just look it up in the book.
 
 ### Ex. 5.1 Discrete probability simulation: Suppose that a basketball player has a 60% chance of making a shot, and he keeps taking shots until he misses two in a row. Also assume his shots are independent (so that each shot has 60% probability of success, no matter what happened before).
 * Hint 3 and 4
@@ -120,11 +133,14 @@ We need to record:
 Let's try and write a function:
 ```{r}
 # Function to simulate basketball player
-basketball <- function(){ # starting the function for you
+basketball <- function(){ 
+#### LOOK @ FIRST PART OF THE SOLUTION    
+    
   
-  # your code here
-  
+
 }
+
+
 # Example usage of the function, when done
 # basket_sim <- basketball(printing = TRUE)
 
